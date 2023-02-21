@@ -1,6 +1,19 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import TheWelcome from "./components/TheWelcome.vue";
+
+const apiMessage = ref("Waiting for message...");
+
+function msgClick(event) {
+  console.log("Message was clicked!");
+}
+
+onMounted(async () => {
+  // Make an get request to our API's message endpoint and store the response as json
+  const msgResponse = await (await fetch("/api/message")).json();
+  apiMessage.value = msgResponse.body;
+});
 </script>
 
 <template>
@@ -13,8 +26,8 @@ import TheWelcome from "./components/TheWelcome.vue";
       height="125"
     />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div @click="msgClick" class="wrapper">
+      <HelloWorld :msg="apiMessage"  />
     </div>
   </header>
 
